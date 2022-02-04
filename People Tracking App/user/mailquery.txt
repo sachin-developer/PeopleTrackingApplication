@@ -1,0 +1,22 @@
+if($user>0 && $user<2){
+        $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $salt = substr(str_shuffle($str_result), 0, 4);
+        $key = password_hash($salt,PASSWORD_BCRYPT);
+        $setCount = "INSERT INTO pwdrecovery(email,expire_count,hash_key)
+        VALUES('$email',1,$key)";
+        $RunQuery = mysqli_query($connection,$setCount);
+        if($RunQuery){
+            $to_email = $email;
+            $subject = "Password Recovery";
+            $body = "<a href='http://localhost/People%20Tracking%20App/user/<?= $ResetPassword?email=$email&key=$salt?>'>Click To Reset The Password</a>";
+            $headers = "From:fsd68team@yahoo.com";
+            
+            if ( mail($to_email, $subject, $body, $headers)) {
+                echo("Password Recovery Link successfully sent to $to_email...");
+            } else {
+                echo("Password Recovery Link sending failed...");
+            }
+        }
+    }else{
+        echo("We didn't found email");
+    }
